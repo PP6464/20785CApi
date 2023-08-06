@@ -3,8 +3,6 @@ import firebase from 'firebase-admin';
 
 ConfigModule.forRoot();
 
-console.log(process.env.FIREBASE_PRIVATE_KEY);
-
 firebase.initializeApp({
   credential: firebase.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
