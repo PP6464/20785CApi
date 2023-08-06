@@ -12,6 +12,12 @@ import { auth, firestore } from '../firebase/firebase';
 export class AuthController {
   @Post('login')
   async login(@Body() user: UserDetails) {
+    if (!user.teamNumber.match('^\\d{1,5}[a-zA-Z]$')) {
+      throw new HttpException(
+        'Team number is invalid',
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    }
     const firestoreUser = await firestore.doc(`users/${user.teamNumber}`).get();
     if (!firestoreUser.exists) {
       throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
@@ -24,7 +30,7 @@ export class AuthController {
 
   @Put('signup')
   async signUp(@Body() user: UserDetails) {
-    if (user.teamNumber.match('^\\d{1,5}[a-zA-Z]{1}$') !== null) {
+    if (user.teamNumber.match('^\\d{1,5}[a-zA-Z]$') !== null) {
       throw new HttpException(
         'Team number not correctly formatted',
         HttpStatus.NOT_ACCEPTABLE,
